@@ -1,0 +1,526 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Opportunity Hub</title>
+  <style>
+    :root {
+      --blue: #3157d5;
+      --navy: #172554;
+      --bg: #f4f6fb;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #1e293b;
+    }
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 25px 6%;
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 27px; }
+    header p { margin: 0; color: #dbeafe; line-height: 1.6; }
+
+    main {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 0 18px;
+    }
+
+    .notice {
+      padding: 12px 15px;
+      background: #fff7d6;
+      border: 1px solid #f5d76e;
+      border-radius: 10px;
+      line-height: 1.5;
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stat, .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 20px;
+    }
+
+    .stat p { color: var(--muted); margin: 0 0 12px; }
+    .stat strong { font-size: 29px; color: var(--navy); }
+
+    .panel { margin-bottom: 22px; }
+    h2 { margin: 0 0 18px; font-size: 20px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: white;
+      font: inherit;
+      min-width: 0;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid #bfdbfe;
+      border-color: var(--blue);
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .primary { background: var(--blue); color: white; }
+    .secondary { background: #e8edff; color: #2443a5; }
+    .danger { background: #fee2e2; color: #991b1b; }
+
+    button:hover { filter: brightness(0.96); }
+
+    .form-actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 210px auto;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .opportunity {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .opp-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .opportunity h3 { margin: 0 0 7px; font-size: 17px; }
+    .company { color: var(--muted); margin: 0 0 12px; }
+
+    .details {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 5px 9px;
+      background: #e8edff;
+      color: #2443a5;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .badge.demo { background: #fff1d6; color: #854d0e; }
+    .opp-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .opp-actions select { width: auto; max-width: 100%; }
+    .empty { color: var(--muted); text-align: center; padding: 25px 5px; }
+    .footer { text-align: center; color: var(--muted); font-size: 12px; padding: 15px; }
+
+    @media (max-width: 700px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toolbar { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      header h1 { font-size: 23px; }
+      .opp-top { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎓 Student Opportunity Hub</h1>
+    <p>One place to organize internships, track applications, and manage deadlines.</p>
+  </header>
+
+  <main>
+    <div class="notice">
+      <strong>Portfolio project:</strong> Demo records are examples, not verified
+      vacancies. Add real opportunities and verify details on the employer's
+      official website before applying. Your records are saved in this browser.
+    </div>
+
+    <section class="stats" aria-label="Application summary">
+      <div class="stat"><p>Total opportunities</p><strong id="total">0</strong></div>
+      <div class="stat"><p>Applied</p><strong id="applied">0</strong></div>
+      <div class="stat"><p>Interviews</p><strong id="interviews">0</strong></div>
+      <div class="stat"><p>Offers</p><strong id="offers">0</strong></div>
+    </section>
+
+    <section class="panel">
+      <h2 id="formTitle">＋ Add an opportunity</h2>
+      <form id="opportunityForm">
+        <div class="form-grid">
+          <div>
+            <label for="role">Role / internship title *</label>
+            <input id="role" required maxlength="100" placeholder="e.g. Web Development Intern">
+          </div>
+          <div>
+            <label for="company">Company / organization *</label>
+            <input id="company" required maxlength="100" placeholder="e.g. Example Technologies">
+          </div>
+          <div>
+            <label for="deadline">Application deadline</label>
+            <input id="deadline" type="date">
+          </div>
+          <div>
+            <label for="status">Application status</label>
+            <select id="status">
+              <option>Interested</option>
+              <option>Applied</option>
+              <option>Interview</option>
+              <option>Offer</option>
+              <option>Rejected</option>
+            </select>
+          </div>
+          <div style="grid-column: 1 / -1">
+            <label for="link">Official opportunity link</label>
+            <input id="link" type="url" placeholder="https://example.com/careers">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="primary" id="saveButton" type="submit">Add opportunity</button>
+          <button class="secondary" type="reset" id="cancelEdit" hidden>Cancel edit</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>My opportunities</h2>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Search roles or companies..." aria-label="Search opportunities">
+        <select id="filter" aria-label="Filter by status">
+          <option value="All">All statuses</option>
+          <option>Interested</option>
+          <option>Applied</option>
+          <option>Interview</option>
+          <option>Offer</option>
+          <option>Rejected</option>
+        </select>
+        <button class="secondary" id="exportButton" type="button">Export CSV ↓</button>
+      </div>
+      <div id="opportunityList" aria-live="polite"></div>
+    </section>
+
+    <p class="footer">Student Opportunity Hub · Built with HTML, CSS and JavaScript</p>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "studentOpportunityHub_v1";
+    const STATUSES = ["Interested", "Applied", "Interview", "Offer", "Rejected"];
+
+    const demoData = [
+      {
+        id: "demo-1",
+        role: "Frontend Development Intern",
+        company: "Demo Organization A",
+        deadline: "",
+        status: "Interested",
+        link: "",
+        demo: true
+      },
+      {
+        id: "demo-2",
+        role: "Software Engineering Intern",
+        company: "Demo Organization B",
+        deadline: "",
+        status: "Interested",
+        link: "",
+        demo: true
+      }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const form = $("opportunityForm");
+    const list = $("opportunityList");
+
+    let opportunities;
+    let editingId = null;
+
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      opportunities = saved === null ? demoData : JSON.parse(saved);
+      if (!Array.isArray(opportunities)) opportunities = [];
+    } catch {
+      opportunities = [];
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(opportunities));
+        render();
+      } catch {
+        alert("The browser could not save your data. Check your browser storage settings.");
+      }
+    }
+
+    function safeLink(value) {
+      try {
+        const url = new URL(value);
+        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function makeElement(tag, text, className) {
+      const el = document.createElement(tag);
+      el.textContent = text;
+      if (className) el.className = className;
+      return el;
+    }
+
+    function render() {
+      $("total").textContent = opportunities.length;
+      $("applied").textContent =
+        opportunities.filter(o => o.status === "Applied").length;
+      $("interviews").textContent =
+        opportunities.filter(o => o.status === "Interview").length;
+      $("offers").textContent =
+        opportunities.filter(o => o.status === "Offer").length;
+
+      const query = $("search").value.trim().toLowerCase();
+      const filter = $("filter").value;
+
+      const visible = opportunities.filter(o => {
+        const matchesText =
+          (o.role + " " + o.company).toLowerCase().includes(query);
+        const matchesStatus = filter === "All" || o.status === filter;
+        return matchesText && matchesStatus;
+      });
+
+      list.replaceChildren();
+
+      if (visible.length === 0) {
+        list.append(makeElement("p", "No opportunities found. Try another search or add one above.", "empty"));
+        return;
+      }
+
+      visible.forEach(o => {
+        const card = makeElement("article", "", "opportunity");
+        const top = makeElement("div", "", "opp-top");
+        const titleGroup = document.createElement("div");
+        titleGroup.append(makeElement("h3", o.role));
+        titleGroup.append(makeElement("p", o.company, "company"));
+
+        if (o.demo) {
+          titleGroup.append(makeElement("span", "Demo example — replace with a real listing", "badge demo"));
+        }
+
+        const badge = makeElement("span", o.status, "badge");
+        top.append(titleGroup, badge);
+        card.append(top);
+
+        const details = makeElement("div", "");
+        details.append(makeElement(
+          "div",
+          "Deadline: " + (o.deadline || "Not specified"),
+          "details"
+        ));
+
+        if (o.link && safeLink(o.link)) {
+          const anchor = document.createElement("a");
+          anchor.href = safeLink(o.link);
+          anchor.target = "_blank";
+          anchor.rel = "noopener noreferrer";
+          anchor.textContent = "Open opportunity link ↗";
+          details.append(anchor);
+        } else {
+          details.append(makeElement("div", "No opportunity link added", "details"));
+        }
+        card.append(details);
+
+        const actions = makeElement("div", "", "opp-actions");
+        const statusSelect = document.createElement("select");
+        statusSelect.setAttribute("aria-label", "Change status for " + o.role);
+
+        STATUSES.forEach(status => {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          option.selected = status === o.status;
+          statusSelect.append(option);
+        });
+
+        statusSelect.addEventListener("change", () => {
+          o.status = statusSelect.value;
+          save();
+        });
+
+        const editButton = makeElement("button", "Edit", "secondary");
+        editButton.type = "button";
+        editButton.addEventListener("click", () => editOpportunity(o.id));
+
+        const deleteButton = makeElement("button", "Delete", "danger");
+        deleteButton.type = "button";
+        deleteButton.addEventListener("click", () => {
+          if (confirm("Delete this opportunity?")) {
+            opportunities = opportunities.filter(item => item.id !== o.id);
+            if (editingId === o.id) resetForm();
+            save();
+          }
+        });
+
+        actions.append(statusSelect, editButton, deleteButton);
+        card.append(actions);
+        list.append(card);
+      });
+    }
+
+    function resetForm() {
+      editingId = null;
+      form.reset();
+      $("formTitle").textContent = "＋ Add an opportunity";
+      $("saveButton").textContent = "Add opportunity";
+      $("cancelEdit").hidden = true;
+    }
+
+    function editOpportunity(id) {
+      const o = opportunities.find(item => item.id === id);
+      if (!o) return;
+
+      editingId = id;
+      $("role").value = o.role;
+      $("company").value = o.company;
+      $("deadline").value = o.deadline || "";
+      $("status").value = o.status;
+      $("link").value = o.link || "";
+      $("formTitle").textContent = "Edit opportunity";
+      $("saveButton").textContent = "Save changes";
+      $("cancelEdit").hidden = false;
+      $("role").focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const role = $("role").value.trim();
+      const company = $("company").value.trim();
+      const rawLink = $("link").value.trim();
+      const link = rawLink ? safeLink(rawLink) : "";
+
+      if (!role || !company) {
+        alert("Please enter a role and company.");
+        return;
+      }
+
+      if (rawLink && !link) {
+        alert("Please enter a valid HTTP or HTTPS website link.");
+        return;
+      }
+
+      const data = {
+        role,
+        company,
+        deadline: $("deadline").value,
+        status: $("status").value,
+        link,
+        demo: false
+      };
+
+      if (editingId) {
+        const index = opportunities.findIndex(o => o.id === editingId);
+        if (index !== -1) opportunities[index] = {
+          ...opportunities[index],
+          ...data
+        };
+      } else {
+        opportunities.unshift({
+          id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()),
+          ...data
+        });
+      }
+
+      resetForm();
+      save();
+    });
+
+    $("cancelEdit").addEventListener("click", resetForm);
+    $("search").addEventListener("input", render);
+    $("filter").addEventListener("change", render);
+
+    $("exportButton").addEventListener("click", () => {
+      const rows = [
+        ["Role", "Company", "Deadline", "Status", "Link", "Demo record"],
+        ...opportunities.map(o => [
+          o.role, o.company, o.deadline || "", o.status, o.link || "",
+          o.demo ? "Yes" : "No"
+        ])
+      ];
+
+      const csv = rows.map(row =>
+        row.map(value =>
+          '"' + String(value).replace(/"/g, '""') + '"'
+        ).join(",")
+      ).join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "student-opportunities.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    render();
+  </script>
+</body>
+</html>
